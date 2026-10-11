@@ -1,10 +1,10 @@
 # IC-5701 — Compiladores e Intérpretes
 
 <p align="center">
-  <img alt="Java" src="https://img.shields.io/badge/Java-ED8B00?style=flat-square&logo=openjdk&logoColor=white">
-  <img alt="Gradle" src="https://img.shields.io/badge/Gradle-02303A?style=flat-square&logo=gradle&logoColor=white">
-  <img alt="PlantUML" src="https://img.shields.io/badge/PlantUML-455A64?style=flat-square">
-  <a href="LICENSE"><img alt="Licencia Apache-2.0" src="https://img.shields.io/github/license/tonys183/IC-5701-Compilador?style=flat-square&label=Licencia&logo=opensourceinitiative&logoColor=white"></a>
+  <img alt="Java" src="https://img.shields.io/badge/Java-ED8B00?style=plastic&logo=openjdk&logoColor=white">
+  <img alt="Gradle" src="https://img.shields.io/badge/Gradle-02303A?style=plastic&logo=gradle&logoColor=white">
+  <img alt="PlantUML" src="https://img.shields.io/badge/-PlantUML-455A64?style=plastic">
+  <a href="LICENSE"><img alt="Licencia Apache-2.0" src="https://img.shields.io/github/license/tonys183/IC-5701-Compilador?style=plastic&label=Licencia&logo=opensourceinitiative&logoColor=white"></a>
 </p>
 
 <p align="center">
