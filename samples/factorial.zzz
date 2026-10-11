@@ -1,0 +1,13 @@
+factorial(n : Int) : Int {
+    if (n = 0) {
+        return 1;
+    } else {
+        return n * factorial(n - 1);
+    }
+}
+
+main() : Int {
+    n : Int := 10;
+    print(n); print("! = "); print(factorial(n));
+    return 0;
+}

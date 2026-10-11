@@ -1,0 +1,24 @@
+f(coeficientes:Float[], x:Float) : Float{
+    return coeficientes[0]*x*x + coeficientes[1]*x + coeficientes[2];
+}
+
+derivada(coeficientes:Float[], x:Float) : Float{
+    return 2*coeficientes[0]*x + coeficientes[1];
+}
+
+newton_raphson(coeficientes:Float[], x0:Float, iter:Int) : Float {
+    x : Float := x0;
+    for (i : Int; in [1..iter]) {
+        x := x - f(coeficientes, x)/derivada(coeficientes, x);
+    }
+    return x;
+}
+
+main() : Int {
+    coeficientes : Float[3] := [1.0, -3.0, 2.0];
+    x0 : Float := 0.5;
+    iter : Int := 10;
+    raiz : Float := newton_raphson(coeficientes, x0, iter);
+    print("La raíz aproximada es: "); print(raiz);
+    return 0;
+}

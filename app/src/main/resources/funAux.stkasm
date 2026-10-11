@@ -1,0 +1,548 @@
+.def truthy: args=1, locals=0
+    ; args:
+    ;   0: value
+    ; locals:
+    ;   none
+    load 0
+    iconst 0
+    ieq
+    iconst 0
+    ieq
+    ret
+
+.def igt: args=2, locals=0
+    ; args:
+    ;   0: left
+    ;   1: right
+    ; locals:
+    ;   none
+    load 0
+    load 1
+    swap
+    ilt
+    ret
+
+.def igeq: args=2, locals=0
+    ; args:
+    ;   0: left
+    ;   1: right
+    ; locals:
+    ;   none
+    load 0
+    load 1
+    ilt
+    iconst 0
+    ieq
+    ret
+
+.def ileq: args=2, locals=0
+    ; args:
+    ;   0: left
+    ;   1: right
+    ; locals:
+    ;   none
+    load 0
+    load 1
+    swap
+    ilt
+    iconst 0
+    ieq
+    ret
+
+.def fgt: args=2, locals=0
+    ; args:
+    ;   0: left
+    ;   1: right
+    ; locals:
+    ;   none
+    load 0
+    load 1
+    swap
+    flt
+    ret
+
+.def fgeq: args=2, locals=0
+    ; args:
+    ;   0: left
+    ;   1: right
+    ; locals:
+    ;   none
+    load 0
+    load 1
+    flt
+    iconst 0
+    ieq
+    ret
+
+.def fleq: args=2, locals=0
+    ; args:
+    ;   0: left
+    ;   1: right
+    ; locals:
+    ;   none
+    load 0
+    load 1
+    swap
+    flt
+    iconst 0
+    ieq
+    ret
+
+.def idiv: args=2, locals=0
+    ; args:
+    ;   0: numerator
+    ;   1: denominator
+    ; locals:
+    ;   none
+    load 0
+    call iabs()
+    load 1
+    call iabs()
+    call idiv_aux()
+    load 0
+    load 1
+    call check_symbol()
+    imul
+    ret
+
+.def iabs: args=1, locals=0
+    ; args:
+    ;   0: value
+    ; locals:
+    ;   none
+    load 0
+    iconst 0
+    ilt
+    jmpt label_iabs
+    load 0
+    ret
+
+    label_iabs:
+        iconst 0
+        load 0
+        isub
+        ret
+
+.def idiv_aux: args=2, locals=1
+    ; args:
+    ;   0: numerator_abs
+    ;   1: denominator_abs
+    ; locals:
+    ;   2: quotient
+    iconst 0
+    store 2
+    load 1
+    iconst 0
+    ieq
+    jmpt label_idiv_aux_end
+
+    label_idiv_aux_loop:
+        load 0
+        load 1
+        ilt
+        jmpt label_idiv_aux_end
+        load 0
+        load 1
+        isub
+        store 0
+        load 2
+        iconst 1
+        iadd
+        store 2
+        jmp label_idiv_aux_loop
+
+    label_idiv_aux_end:
+        load 2
+        ret
+
+.def check_symbol: args=2, locals=0
+    ; args:
+    ;   0: left
+    ;   1: right
+    ; locals:
+    ;   none
+    load 0
+    load 1
+    imul
+    iconst 0
+    ilt
+    jmpt label_check_symbol_ret_minus_one
+    iconst 1
+    ret
+
+    label_check_symbol_ret_minus_one:
+        iconst -1
+        ret
+
+.def fdiv: args=2, locals=1
+    ; args:
+    ;   0: numerator
+    ;   1: denominator
+    ; locals:
+    ;   2: inverse_denominator
+    load 1
+    call fabs()
+    fconst 0.00001
+    call fun_inv()
+    store 2
+    load 1
+    fconst 0.0
+    flt
+    jmpt label_fdiv_neg
+    jmp label_fdiv_mult
+
+    label_fdiv_neg:
+        fconst 0.0
+        load 2
+        fsub
+        store 2
+
+    label_fdiv_mult:
+        load 0
+        load 2
+        fmul
+        ret
+
+.def fabs: args=1, locals=0
+    ; args:
+    ;   0: value
+    ; locals:
+    ;   none
+    load 0
+    fconst 0.0
+    flt
+    jmpt label_fabs_neg
+    load 0
+    ret
+
+    label_fabs_neg:
+        fconst 0.0
+        load 0
+        fsub
+        ret
+
+.def fun_inv: args=2, locals=1
+    ; args:
+    ;   0: value
+    ;   1: tolerance
+    ; locals:
+    ;   2: xn
+    load 0
+    call fun_x0()
+    store 2
+
+    label_fun_inv_loop:
+        load 0
+        load 2
+        fmul
+        fconst 1.0
+        fsub
+        call fabs()
+        load 1
+        flt
+        jmpt label_fun_inv_end
+        load 0
+        load 2
+        call fun_xn()
+        store 2
+        jmp label_fun_inv_loop
+
+    label_fun_inv_end:
+        load 2
+        ret
+
+.def fun_x0: args=1, locals=0
+    ; args:
+    ;   0: value
+    ; locals:
+    ;   none
+    fconst 1.0
+    load 0
+    flt
+    jmpt label_fun_x0_ret_inf
+    fconst 1.0
+    ret
+
+    label_fun_x0_ret_inf:
+        fconst 0.5
+        ret
+
+.def fun_xn: args=2, locals=0
+    ; args:
+    ;   0: value
+    ;   1: xn
+    ; locals:
+    ;   none
+    fconst 2.0
+    load 0
+    load 1
+    fmul
+    fsub
+    load 1
+    fmul
+    ret
+
+.def imod: args = 2, locals = 0
+    ; args:
+    ;   0: dividend
+    ;   1: divisor
+    ; locals:
+    ;   none
+    load 0
+    call iabs()
+    load 1
+    call iabs()
+    call idiv()
+    load 1
+    imul
+    load 0
+    swap
+    isub
+    ret
+
+.def itoc: args=1, locals=1
+    ; args:
+    ;   0: value
+    ; locals:
+    ;   1: char_buffer
+    iconst 1
+    alloc
+    store 1
+    load 0
+    iconst 1000000000
+    call imod()
+    iconst 0
+    hstore 1
+    iconst 0
+    hcload 1
+    ret
+
+.def ftoi: args=1, locals=1
+    ; args:
+    ;   0: value
+    ; locals:
+    ;   1: result
+    iconst 0
+    store 1
+    load 0
+    fconst 0.0
+    flt
+    jmpt label_ftoi_neg_loop
+
+    label_ftoi_loop:
+        load 0
+        fconst 1.0
+        flt
+        jmpt label_ftoi_end_loop
+        load 0
+        fconst 1.0
+        fsub
+        store 0
+        load 1
+        iconst 1
+        iadd
+        store 1
+        jmp label_ftoi_loop
+
+    label_ftoi_neg_loop:
+        fconst -1.0
+        load 0
+        flt
+        jmpt label_ftoi_end_loop
+        load 0
+        fconst 1.0
+        fadd
+        store 0
+        load 1
+        iconst 1
+        isub
+        store 1
+        jmp label_ftoi_neg_loop
+
+    label_ftoi_end_loop:
+        load 1
+        ret
+
+.def irealloc: args=2, locals=3
+    ; args:
+    ;   0: old_list
+    ;   1: new_size
+    ; locals:
+    ;   2: new_list
+    ;   3: i
+    ;   4: min_size
+    load 1
+    alloc
+    store 2
+    load 0
+    hlen
+    load 1
+    ilt
+    jmpt label_irealloc_old_is_min
+    load 1
+    store 4
+    jmp label_irealloc_min_done
+    label_irealloc_old_is_min:
+        load 0
+        hlen
+        store 4
+    label_irealloc_min_done:
+    iconst 0
+    store 3
+    label_irealloc_loop:
+        load 3
+        load 4
+        ilt
+        iconst 0
+        ieq
+        jmpt label_irealloc_end
+        load 3
+        hiload 0
+        load 3
+        hstore 2
+        load 3
+        iconst 1
+        iadd
+        store 3
+        jmp label_irealloc_loop
+    label_irealloc_end:
+        load 2
+        ret
+
+.def frealloc: args=2, locals=3
+    ; args:
+    ;   0: old_list
+    ;   1: new_size
+    ; locals:
+    ;   2: new_list
+    ;   3: i
+    ;   4: min_size
+    load 1
+    alloc
+    store 2
+    load 0
+    hlen
+    load 1
+    ilt
+    jmpt label_frealloc_old_is_min
+    load 1
+    store 4
+    jmp label_frealloc_min_done
+    label_frealloc_old_is_min:
+        load 0
+        hlen
+        store 4
+    label_frealloc_min_done:
+    iconst 0
+    store 3
+    label_frealloc_loop:
+        load 3
+        load 4
+        ilt
+        iconst 0
+        ieq
+        jmpt label_frealloc_end
+        load 3
+        hfload 0
+        load 3
+        hstore 2
+        load 3
+        iconst 1
+        iadd
+        store 3
+        jmp label_frealloc_loop
+    label_frealloc_end:
+        load 2
+        ret
+
+.def crealloc: args=2, locals=3
+    ; args:
+    ;   0: old_list
+    ;   1: new_size
+    ; locals:
+    ;   2: new_list
+    ;   3: i
+    ;   4: min_size
+    load 1
+    alloc
+    store 2
+    load 0
+    hlen
+    load 1
+    ilt
+    jmpt label_crealloc_old_is_min
+    load 1
+    store 4
+    jmp label_crealloc_min_done
+    label_crealloc_old_is_min:
+        load 0
+        hlen
+        store 4
+    label_crealloc_min_done:
+    iconst 0
+    store 3
+    label_crealloc_loop:
+        load 3
+        load 4
+        ilt
+        iconst 0
+        ieq
+        jmpt label_crealloc_end
+        load 3
+        hcload 0
+        load 3
+        hstore 2
+        load 3
+        iconst 1
+        iadd
+        store 3
+        jmp label_crealloc_loop
+    label_crealloc_end:
+        load 2
+        ret
+
+.def srealloc: args=2, locals=3
+    ; args:
+    ;   0: old_list
+    ;   1: new_size
+    ; locals:
+    ;   2: new_list
+    ;   3: i
+    ;   4: min_size
+    load 1
+    alloc
+    store 2
+    load 0
+    hlen
+    load 1
+    ilt
+    jmpt label_srealloc_old_is_min
+    load 1
+    store 4
+    jmp label_srealloc_min_done
+    label_srealloc_old_is_min:
+        load 0
+        hlen
+        store 4
+    label_srealloc_min_done:
+    iconst 0
+    store 3
+    label_srealloc_loop:
+        load 3
+        load 4
+        ilt
+        iconst 0
+        ieq
+        jmpt label_srealloc_end
+        load 3
+        hsload 0
+        load 3
+        hstore 2
+        load 3
+        iconst 1
+        iadd
+        store 3
+        jmp label_srealloc_loop
+    label_srealloc_end:
+        load 2
+        ret

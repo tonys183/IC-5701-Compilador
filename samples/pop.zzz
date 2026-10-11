@@ -1,0 +1,8 @@
+main() : Int {
+   a : Int[] := [0..100];
+   print(a.pop());
+   for (i : Int; in a) {
+        print(i);
+   }
+   return 0;
+}

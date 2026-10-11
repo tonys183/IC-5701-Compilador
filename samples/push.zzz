@@ -1,0 +1,10 @@
+main() : Int {
+   a : list<Char>;
+   for (i: Char; in ['A'..'Z']) {
+        a.push(i);
+   }
+   for (i: Char; in a) {
+       print(i);
+   }
+   return 0;
+}
