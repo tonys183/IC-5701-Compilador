@@ -1,5 +1,17 @@
 # IC-5701 — Compiladores e Intérpretes
 
+<p align="center">⚙️</p>
+
+<p align="center">
+  <img alt="Java" src="https://img.shields.io/badge/Java-ED8B00?style=flat-square">
+  <img alt="Gradle" src="https://img.shields.io/badge/Gradle-02303A?style=flat-square">
+  <img alt="PlantUML" src="https://img.shields.io/badge/PlantUML-455A64?style=flat-square">
+</p>
+
+<p align="center">
+  <a href="#compilador">Compilador</a> · <a href="#documentación">Documentación</a>
+</p>
+
 ## Compilador
 
 Implementación de un compilador en Java para un lenguaje de programación propio. El proyecto abarca el reconocimiento de tokens, el análisis sintáctico y semántico y la generación de código.
